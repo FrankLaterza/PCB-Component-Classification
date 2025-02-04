@@ -1,7 +1,3 @@
-# Getting started
-
-Here's a comprehensive README for your SAM-based object extraction project:
-
 # SAM Object Extraction Project
 
 This project leverages Meta's Segment Anything Model (SAM) to automatically identify and extract objects from images. The pipeline detects objects using state-of-the-art segmentation and saves individual cropped objects to disk.
@@ -41,12 +37,12 @@ project-root/
 ├── sam_vit_h_4b8939.pth
 ├── input.png
 ├── obj/
-└── extract_objects.py
+└── sep.py
 ```
 
 3. **Run Extraction:**
 ```bash
-python extract_objects.py
+python sep.py
 ```
 
 ## Usage Instructions
@@ -58,7 +54,7 @@ python extract_objects.py
    - ...
 
 ## Configuration Options
-Modify these parameters in `extract_objects.py`:
+Modify these parameters in `sep.py`:
 ```python
 # For different SAM models
 sam_model_registry["vit_l"]  # Large model
@@ -109,6 +105,3 @@ sed -i 's/DEVICE = "cuda"/DEVICE = "cpu"/' extract_objects.py
 
 ## License
 This project uses the [Apache 2.0 license](https://github.com/facebookresearch/segment-anything/blob/main/LICENSE) from the original SAM repository.
-
----
-Answer from Perplexity: pplx.ai/share
