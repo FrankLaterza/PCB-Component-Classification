@@ -6,7 +6,6 @@ A production-ready computer vision pipeline leveraging Meta's Segment Anything M
 
 ## Installation Guide (Windows)
 
-### Prerequisites
 1. **Python 3.11** (required for PyTorch CUDA support)  
    [Download from Microsoft Store](https://apps.microsoft.com/detail/python-311/9NRWMJP3RSLX?hl=en-us&gl=US)  
    *Check "Add Python to PATH" during installation*
