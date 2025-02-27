@@ -59,3 +59,6 @@ Objects detected: 198
 Time per object: 0.0233s
 Output saved: boxed_objects.png and 198 objects in /obj
 ```
+
+## Data set
+https://trust-hub.org/#/data/fics-pcb
