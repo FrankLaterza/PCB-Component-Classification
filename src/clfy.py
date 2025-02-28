@@ -10,9 +10,15 @@ import glob
 MODEL_NAME = "component_classification"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+# TODO gabe: function will return str of all the components
+def get_dataset_component_path(root_dir):
+    # example of how to get
+    paths = glob.glob(os.path.join(root_dir, "*.*"))
+    return paths
+
 class ImageLabelDataset(Dataset):
     def __init__(self, root_dir, transform=None):
-        self.image_paths = glob.glob(os.path.join(root_dir, "*.*"))
+        self.image_paths= get_dataset_component_path(root_dir)
         self.transform = transform
         self.labels = list(set([os.path.basename(p).split('_')[0] for p in self.image_paths]))
         self.label_to_idx = {label: idx for idx, label in enumerate(sorted(self.labels))}
