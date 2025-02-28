@@ -47,7 +47,6 @@ transform = transforms.Compose([
 ])
 
 dataset = ImageLabelDataset(root_dir='./dataset', transform=transform)
-# print(dataset)
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
