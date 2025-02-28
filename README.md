@@ -1,8 +1,24 @@
-# SAM Object Detection and Extraction Pipeline
+# PCB Component Classification
+This deep learning project is designed to take an image and break it down into its components and classify them. We can create an image with boxes and labels demonstrate the results.
 
-A production-ready computer vision pipeline leveraging Meta's Segment Anything Model (SAM) for automatic object detection and isolation. Provides both bounding box visualization and individual object extraction capabilities.
+This project uses a two stage process to output its results. The first is Meta's SAM model which is designed to segment the components into smaller pictures. The second model is a CNN thats trained on the [FICS-PCB](https://trust-hub.org/#/data/fics-pcb) dataset created by the SCAN lab at UF. This data set has pictures of PCBs and segments images labeled by their correct names. This model will be used on the output of the SAM to correctly label the components.
 
-![SAM Pipeline Demo](boxed_objects.png) *Example output showing detected objects*
+## How to use
+The main entry point is the src/ai.py image files that takes arguments to run the models
+
+```cmd
+# train the cnn with the files under the directory dataset/mega
+python src/ai.py -train NUM-OF-EPOCHS
+
+# test the classification model on a test image
+python src/ai.py -classify PATH/TO/IMAGE
+
+# populate the objs directory with segmented images a PCB image
+python src/ai.py -segment PATH/TO/IMAGE
+
+# segment and classify a PCB image
+python src/ai.py -full PATH/TO/IMAGE
+```
 
 ## Installation Guide (Windows)
 
@@ -34,31 +50,3 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 pip install git+https://github.com/facebookresearch/segment-anything.git
 pip install opencv-python matplotlib
 ```
-
-## Usage
-Run the script with
-```
-python sep.py
-```
-
-**Output Files**:
-   - `boxed_objects.png`: Input image with detection bounding boxes
-   - `obj/object_*.png`: Individual cropped objects
-   - Console output showing processing statistics
-
-**Example output**:
-```
-PyTorch Version: 2.6.0.dev20241112+cu121
-CUDA Available: True
-CUDA Version: 12.1
-GPU: NVIDIA GeForce RTX 4060 Ti
-
-PROCESSING SUMMARY
-Total time: 4.61 seconds
-Objects detected: 198
-Time per object: 0.0233s
-Output saved: boxed_objects.png and 198 objects in /obj
-```
-
-## Data set
-https://trust-hub.org/#/data/fics-pcb
