@@ -13,7 +13,11 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 # TODO gabe: function will return str of all the components
 def get_dataset_component_path(root_dir):
     # example of how to get
-    paths = glob.glob(os.path.join(root_dir, "*.*"))
+    path = os.path.join(root_dir, "s*", "DSLR", "components", "**", "*.*")
+
+    # array of all paths
+    paths = glob.glob(path, recursive=True)
+
     return paths
 
 class ImageLabelDataset(Dataset):
@@ -42,7 +46,8 @@ transform = transforms.Compose([
     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
-dataset = ImageLabelDataset(root_dir='./dataset/mega', transform=transform)
+dataset = ImageLabelDataset(root_dir='./dataset', transform=transform)
+# print(dataset)
 train_size = int(0.8 * len(dataset))
 test_size = len(dataset) - train_size
 train_dataset, test_dataset = torch.utils.data.random_split(dataset, [train_size, test_size])
