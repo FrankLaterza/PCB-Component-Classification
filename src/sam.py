@@ -5,7 +5,6 @@ import torch
 def run_sam(file_path) :
     from segment_anything import sam_model_registry, SamAutomaticMaskGenerator
 
-
     # hardware configuration
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     CHECKPOINT_PATH = "sam_vit_h_4b8939.pth"

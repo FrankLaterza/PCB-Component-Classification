@@ -27,7 +27,7 @@ def segment(file_path):
 def full(file_path):
     print(f"running full on file: {file_path}")
 
-    segment(file_path)
+    # segment(file_path)
     directory = "./obj"
     for filename in os.listdir(directory):
         full_path = os.path.join(directory, filename)

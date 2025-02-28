@@ -8,6 +8,7 @@ import os
 import glob
 
 MODEL_NAME = "component_classification"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 class ImageLabelDataset(Dataset):
     def __init__(self, root_dir, transform=None):
@@ -61,7 +62,7 @@ class CNN(nn.Module):
         return x
 
 num_classes = len(dataset.labels)
-model = CNN(num_classes)
+model = CNN(num_classes).to(DEVICE)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -72,6 +73,8 @@ def train_model(num_epochs=10):
         model.train()
         running_loss = 0.0
         for inputs, labels in train_loader:
+            inputs = inputs.to(DEVICE)
+            labels = labels.to(DEVICE)
             optimizer.zero_grad()
             outputs = model(inputs)
             loss = criterion(outputs, labels)
@@ -85,6 +88,8 @@ def train_model(num_epochs=10):
         total = 0
         with torch.no_grad():
             for inputs, labels in test_loader:
+                inputs = inputs.to(DEVICE)
+                labels = labels.to(DEVICE)
                 outputs = model(inputs)
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
@@ -108,11 +113,12 @@ def predict_image(image_path):
     ])
     
     image = Image.open(image_path).convert('RGB')
-    image = transform(image).unsqueeze(0)
+    image = transform(image).unsqueeze(0).to(DEVICE)
     
     checkpoint = torch.load(f'{MODEL_NAME}.pth')
     model.load_state_dict(checkpoint['model_state_dict'])
     idx_to_label = {v: k for k, v in checkpoint['label_mapping'].items()}
+    
     
     with torch.no_grad():
         output = model(image)
