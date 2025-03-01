@@ -92,7 +92,7 @@ def train_model(num_epochs=10):
             optimizer.step()
             running_loss += loss.item()
         
-        # Validation
+        # validation
         model.eval()
         correct = 0
         total = 0
@@ -122,21 +122,18 @@ def predict_image(image_path):
         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
     
-    # Load checkpoint FIRST to get class info
     checkpoint = torch.load(f'{MODEL_NAME}.pth', map_location=DEVICE)
     
-    # Create model with correct number of classes from checkpoint
     num_classes = len(checkpoint['label_mapping'])
     model = CNN(num_classes).to(DEVICE)
     model.load_state_dict(checkpoint['model_state_dict'])
     
-    # Prepare image
     image = Image.open(image_path).convert('RGB')
     image = transform(image).unsqueeze(0).to(DEVICE)
     
-    # Make prediction
     idx_to_label = {v: k for k, v in checkpoint['label_mapping'].items()}
     with torch.no_grad():
         output = model(image)
-        _, predicted = torch.max(output.data, 1)
-        return idx_to_label[predicted.item()]
+        probabilities = torch.nn.functional.softmax(output, dim=1)
+        confidence, predicted = torch.max(probabilities.data, 1)
+    return idx_to_label[predicted.item()], confidence.item()
