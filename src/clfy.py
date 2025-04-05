@@ -6,6 +6,9 @@ from torchvision import transforms
 from PIL import Image
 import os
 import glob
+from  sklearn.metrics import f1_score
+import numpy
+
 
 MODEL_NAME = "component_classification"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -106,8 +109,13 @@ def train_model(num_epochs=10):
                 correct += (predicted == labels).sum().item()
         
         acc = 100 * correct / total
-        print(f'Epoch {epoch+1}, Loss: {running_loss/len(train_loader):.4f}, Acc: {acc:.2f}%')
         
+        f1_prediction = predicted.cpu().numpy()  # Move tensor to CPU first
+        f1_truth = labels.cpu().numpy()  # Move tensor to CPU first
+
+        f1 = f1_score(f1_truth,f1_prediction,average='weighted')
+        
+        print(f'Epoch {epoch+1}, Loss: {running_loss/len(train_loader):.4f}, Acc: {acc:.2f}%, F1 Score: {f1}')
         if acc > best_acc:
             torch.save({
                 'model_state_dict': model.state_dict(),
@@ -136,4 +144,16 @@ def predict_image(image_path):
         output = model(image)
         probabilities = torch.nn.functional.softmax(output, dim=1)
         confidence, predicted = torch.max(probabilities.data, 1)
-    return idx_to_label[predicted.item()], confidence.item()
+        
+        ret_arr = []
+
+        for idx, t in enumerate(probabilities.flatten()):
+            if t >= 0.7:
+                #print(f'{idx_to_label[idx]}: {t}\n')
+                ret_arr.append({idx_to_label[idx], t.item()})
+
+        if len(ret_arr) == 0:
+            ret_arr.append({idx_to_label[predicted.item()], confidence.item()})
+
+    # return idx_to_label[predicted.item()], confidence.item()
+    return ret_arr
