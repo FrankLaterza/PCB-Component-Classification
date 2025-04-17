@@ -165,8 +165,8 @@ def train_model(num_epochs=10, loss_plot_path="loss_curve.png"):
 
         acc = 100 * correct / total
         
-        f1_prediction = predicted.numpy()
-        f1_truth = labels.numpy()
+        f1_prediction = predicted.cpu().numpy()
+        f1_truth = labels.cpu().numpy()
         f1 = f1_score(f1_truth,f1_prediction,average='weighted')
         
         print(f'Epoch {epoch+1}, Loss: {running_loss/len(train_loader):.4f}, Acc: {acc:.2f}%, F1 Score: {f1}')
